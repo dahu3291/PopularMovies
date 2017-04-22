@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="thumbnail_padding">2dp</dimen>
-    <dimen name="default_padding">8dp</dimen>
+    <dimen name="default_padding">4dp</dimen>
     <dimen name="thumbnail_list_height">275dp</dimen>
-    <dimen name="thumbnail_list_width">200dp</dimen>
+    <dimen name="thumbnail_list_width">158dp</dimen>
     <dimen name="detail_movie_title_card_height">125dp</dimen>
     <dimen name="no_padding">0dp</dimen>
     <dimen name="detail_title_text_size">45sp</dimen>

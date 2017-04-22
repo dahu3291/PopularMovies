@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onResume();
         //resize recyclers gridview depending on orientation
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        int columns = (int) ((displayMetrics.widthPixels / displayMetrics.density) / 200);
+        int thumbnailWidth = Integer.parseInt(getString(R.string.thumbnail_list_width));
+        int columns = (int) ((displayMetrics.widthPixels / displayMetrics.density) / thumbnailWidth);
 
         recyclerView.setLayoutManager(new GridLayoutManager(this, columns, GridLayoutManager.VERTICAL, false));
     }

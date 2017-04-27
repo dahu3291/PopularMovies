@@ -69,4 +69,13 @@
         android:textSize="@dimen/detail_overview_text_size"
         tools:text="Overview: Best story ever!"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/trilar_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/default_padding"
+        android:paddingBottom="@dimen/default_padding"
+        android:layout_gravity="center"
+        android:background="@color/colorPrimaryDark"/>
+
 </LinearLayout>

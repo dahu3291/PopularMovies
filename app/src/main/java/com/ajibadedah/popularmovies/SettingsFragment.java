@@ -50,13 +50,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Context context = getContext();
+        Preference preference = findPreference(key);
+        String value = sharedPreferences.getString(preference.getKey(), "");
         if (key.equals(getString(R.string.pref_sort_key))){
-            MovieIntentService.startMovieSync(context);
+            //if sort is popular or top rated sync request new info from The Movie Database
+            if (value.equals(getString(R.string.pref_sort_popular)) ||
+                    value.equals(getString(R.string.pref_sort_top_rated))){
+                MovieIntentService.startMovieSync(context);
+            }
         }
 
-        Preference preference = findPreference(key);
         if (!(preference instanceof CheckBoxPreference)){
-            String value = sharedPreferences.getString(preference.getKey(), "");
             setPreferenceSummary(preference, value);
         }
     }

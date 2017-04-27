@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ajibadedah.popularmovies.data.MovieContract.MovieEntry;
+import com.ajibadedah.popularmovies.data.SettingsPreferences;
 import com.ajibadedah.popularmovies.sync.MovieIntentService;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MovieAdapter.ThumbnailClickedListener{
@@ -59,8 +60,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-        String[] projection = {MovieEntry.COLUMN_PHOTO_PATH, MovieEntry.COLUMN_MOVIE_ID, MovieEntry.COLUMN_TITLE};
-        return new CursorLoader(this, MovieEntry.CONTENT_URI, projection, null, null, null);
+        String[] projection = {MovieEntry.COLUMN_PHOTO_PATH, MovieEntry.COLUMN_MOVIE_ID};
+        Uri queryUri = SettingsPreferences.getQueryUri(this);
+        return new CursorLoader(this, queryUri, projection, null, null, null);
     }
 
     @Override
@@ -82,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onThumbnailClicked(String movieID) {
         Intent movieDetail = new Intent(MainActivity.this, DetailActivity.class);
-        Uri uri = MovieEntry.buildUriWithMovieID(movieID);
+        Uri uri = MovieEntry.buildUriForMovieWithMovieID(movieID);
         movieDetail.setData(uri);
         startActivity(movieDetail);
 

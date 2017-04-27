@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.ajibadedah.popularmovies.data.MovieContract.MovieEntry;
 import com.ajibadedah.popularmovies.utilities.NetworkUtils;
@@ -27,6 +28,13 @@ public class MovieIntentService extends IntentService {
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
     private static final String ACTION_MOVIE_SYNC = TAG + ".SYNC";
 
+    private static final String ACTION_UPDATE_FAV = TAG + ".UPDATE.FAV";
+    private static final String EXTRA_VALUES = TAG + ".ContentValues";
+
+    private static final String ACTION_FAVORITE_INSERT = TAG + "FAVORITE.INSERT";
+    private static final String ACTION_FAVORITE_DELETE = TAG + "FAVORITE.DELETE";
+
+
     public MovieIntentService() {
         super("MovieIntentService");
     }
@@ -43,6 +51,32 @@ public class MovieIntentService extends IntentService {
         context.startService(intent);
     }
 
+    //update the favorite column in movie table
+    public static void updateMovieFavorite(Context context, Uri uri, ContentValues values) {
+        Intent intent = new Intent(context, MovieIntentService.class);
+        intent.setAction(ACTION_UPDATE_FAV);
+        intent.setData(uri);
+        intent.putExtra(EXTRA_VALUES, values);
+        context.startService(intent);
+    }
+
+    //insert new row in favorite table
+    public static void insertFavoriteTable(Context context, Uri uri, ContentValues values) {
+        Intent intent = new Intent(context, MovieIntentService.class);
+        intent.setAction(ACTION_FAVORITE_INSERT);
+        intent.setData(uri);
+        intent.putExtra(EXTRA_VALUES, values);
+        context.startService(intent);
+    }
+
+    //insert new row in favorite table
+    public static void deleteFavoriteTable(Context context, Uri uri) {
+        Intent intent = new Intent(context, MovieIntentService.class);
+        intent.setAction(ACTION_FAVORITE_DELETE);
+        intent.setData(uri);
+        context.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -50,7 +84,23 @@ public class MovieIntentService extends IntentService {
             if (ACTION_MOVIE_SYNC.equals(action)) {
                 handleActionMovieSync();
             }
+            if (ACTION_UPDATE_FAV.equals(action)) {
+                ContentValues values = intent.getParcelableExtra(EXTRA_VALUES);
+                handleActionUpdate(intent.getData(), values);
+            }
+            if (ACTION_FAVORITE_INSERT.equals(action)) {
+                ContentValues values = intent.getParcelableExtra(EXTRA_VALUES);
+                handleActionFavoriteInsert(intent.getData(), values);
+            }
+            if (ACTION_FAVORITE_DELETE.equals(action)) {
+                handleActionFavoriteDelete(intent.getData());
+            }
         }
+    }
+
+    private void handleActionUpdate(Uri uri, ContentValues values) {
+
+        getContentResolver().update(uri, values, null, null);
     }
 
     /**
@@ -75,7 +125,7 @@ public class MovieIntentService extends IntentService {
                     JSONObject movieJson = new JSONObject(json);
                     JSONArray jsonArray = movieJson.getJSONArray("results");
 
-                    getContentResolver().delete(MovieEntry.CONTENT_URI, null, null);
+                    getContentResolver().delete(MovieEntry.CONTENT_URI_MOVIE, null, null);
                     ContentValues values = new ContentValues();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         movieID = jsonArray.getJSONObject(i).getString("id");
@@ -91,8 +141,10 @@ public class MovieIntentService extends IntentService {
                         values.put(MovieEntry.COLUMN_RATING, rating);
                         values.put(MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
                         values.put(MovieEntry.COLUMN_PHOTO_PATH, path);
+                        values.put(MovieEntry.COLUMN_PHOTO_PATH, path);
+                        values.put(MovieEntry.COLUMN_FAVORITE, 0);
 
-                        getContentResolver().insert(MovieEntry.CONTENT_URI, values);
+                        getContentResolver().insert(MovieEntry.CONTENT_URI_MOVIE, values);
 
                     }
                 } catch (JSONException e) {
@@ -102,6 +154,14 @@ public class MovieIntentService extends IntentService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void handleActionFavoriteInsert(Uri uri, ContentValues values) {
+        getContentResolver().insert(uri, values);
+    }
+
+    private void handleActionFavoriteDelete(Uri uri) {
+        getContentResolver().delete(uri, null, null);
     }
 
 }

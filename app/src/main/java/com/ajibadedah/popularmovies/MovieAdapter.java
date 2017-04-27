@@ -12,6 +12,9 @@ import com.ajibadedah.popularmovies.data.MovieContract.MovieEntry;
 import com.ajibadedah.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import java.net.URL;
+import java.util.ArrayList;
+
 /**
  * Created by ajibade on 4/19/17
  */
@@ -22,6 +25,7 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     private Context context;
 
     private final ThumbnailClickedListener thumbnailListener;
+
 
     interface ThumbnailClickedListener{
         void onThumbnailClicked(String movieID);

@@ -1,7 +1,6 @@
 package com.ajibadedah.popularmovies;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,7 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * Created by ajibade on 4/25/17.
+ * Created by ajibade on 4/25/17
  */
 
 public class TrailerAndReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{

@@ -56,8 +56,6 @@ public class DetailActivity extends AppCompatActivity implements
     private ImageView photo;
     private RecyclerView trailerRecyclerView;
 
-    private TrailerAndReviewAdapter trailerAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,7 +195,8 @@ public class DetailActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(ArrayList<Object> item) {
             super.onPostExecute(item);
-            trailerAdapter = new TrailerAndReviewAdapter(DetailActivity.this, DetailActivity.this, item);
+            TrailerAndReviewAdapter trailerAdapter =
+                    new TrailerAndReviewAdapter(DetailActivity.this, DetailActivity.this, item);
             trailerRecyclerView.setAdapter(trailerAdapter);
             trailerRecyclerView.setLayoutManager(new LinearLayoutManager(
                     DetailActivity.this, LinearLayoutManager.VERTICAL, false));

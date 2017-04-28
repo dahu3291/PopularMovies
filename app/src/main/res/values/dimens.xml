@@ -4,12 +4,13 @@
     <dimen name="default_padding">4dp</dimen>
     <dimen name="thumbnail_list_height">275dp</dimen>
     <dimen name="thumbnail_list_width">158dp</dimen>
-    <dimen name="detail_movie_title_card_height">125dp</dimen>
+    <dimen name="detail_movie_title_card_height">100dp</dimen>
     <dimen name="no_padding">0dp</dimen>
-    <dimen name="detail_title_text_size">45sp</dimen>
+    <dimen name="detail_title_text_size">35sp</dimen>
     <dimen name="detail_image_width">200dp</dimen>
     <dimen name="detail_image_height">200dp</dimen>
     <dimen name="detail_image_padding">20dp</dimen>
     <dimen name="detail_rating_text_size">14sp</dimen>
     <dimen name="detail_overview_text_size">17sp</dimen>
+    <dimen name="detail_trailer_margin">4dp</dimen>
 </resources>

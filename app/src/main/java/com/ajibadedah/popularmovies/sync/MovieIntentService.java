@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 
 import com.ajibadedah.popularmovies.data.MovieContract.MovieEntry;
@@ -141,8 +142,7 @@ public class MovieIntentService extends IntentService {
                         values.put(MovieEntry.COLUMN_RATING, rating);
                         values.put(MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
                         values.put(MovieEntry.COLUMN_PHOTO_PATH, path);
-                        values.put(MovieEntry.COLUMN_PHOTO_PATH, path);
-                        values.put(MovieEntry.COLUMN_FAVORITE, 0);
+                        values.put(MovieEntry.COLUMN_FAVORITE, findFavorite(movieID));
 
                         getContentResolver().insert(MovieEntry.CONTENT_URI_MOVIE, values);
 
@@ -154,6 +154,23 @@ public class MovieIntentService extends IntentService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private int findFavorite(String movieId){
+        int isFavorite = 0;
+        Cursor cursor = getContentResolver().
+                query(MovieEntry.buildUriForFavoriteWithMovieID(movieId),
+                new String[]{MovieEntry.COLUMN_MOVIE_ID} , null, null, null);
+
+        if (cursor != null){
+            if (cursor.getCount() > 0) {
+                isFavorite = 1;
+            }
+            cursor.close();
+        }
+        isFavorite = isFavorite;
+        int a = isFavorite + 1;
+        return isFavorite;
     }
 
     private void handleActionFavoriteInsert(Uri uri, ContentValues values) {

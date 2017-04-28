@@ -51,6 +51,14 @@ public class NetworkUtils {
         return changeUriToURL(uri);
     }
 
+    public static URL buildUrlForReview(Context context, String movieId) {
+        Uri uri = Uri.parse(MOVIE_URL + movieId + "/" + "reviews").buildUpon()
+                .appendQueryParameter(QUERY_API, context.getString(R.string.API_KEY))
+                .build();
+
+        return changeUriToURL(uri);
+    }
+
     private static URL changeUriToURL(Uri uri){
         try {
             URL url = new URL(uri.toString());

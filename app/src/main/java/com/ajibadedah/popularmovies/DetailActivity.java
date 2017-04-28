@@ -31,7 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor>, TrailerAdapter.TrailerClickedListener {
+        LoaderManager.LoaderCallbacks<Cursor>, TrailerAndReviewAdapter.TrailerClickedListener {
 
     public static final String[] PROJECTION = {MovieEntry.COLUMN_TITLE,
             MovieEntry.COLUMN_OVERVIEW, MovieEntry.COLUMN_PHOTO_PATH, MovieEntry.COLUMN_RATING,
@@ -56,7 +56,7 @@ public class DetailActivity extends AppCompatActivity implements
     private ImageView photo;
     private RecyclerView trailerRecyclerView;
 
-    private TrailerAdapter trailerAdapter;
+    private TrailerAndReviewAdapter trailerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +135,13 @@ public class DetailActivity extends AppCompatActivity implements
         if (id == R.id.menu_fav) {
             cursor.moveToFirst();
             ContentValues values = new ContentValues();
+            values.put(MovieEntry.COLUMN_MOVIE_ID, movieUri.getLastPathSegment());
+            values.put(MovieEntry.COLUMN_TITLE, cursor.getString(INDEX_TITLE));
+            values.put(MovieEntry.COLUMN_OVERVIEW, cursor.getString(INDEX_OVERVIEW));
+            values.put(MovieEntry.COLUMN_RATING, cursor.getString(INDEX_RATING));
+            values.put(MovieEntry.COLUMN_RELEASE_DATE, cursor.getString(INDEX_RELEASE_DATE));
+            values.put(MovieEntry.COLUMN_PHOTO_PATH, cursor.getString(INDEX_PHOTO_PATH));
+
             int status = cursor.getInt(INDEX_FAVORITE);
             if (status == 0){
                 values.put(MovieEntry.COLUMN_FAVORITE, 1);
@@ -147,6 +154,7 @@ public class DetailActivity extends AppCompatActivity implements
                         buildUriForFavoriteWithMovieID(movieUri.getLastPathSegment());
                 MovieIntentService.deleteFavoriteTable(this, favoriteUri);
             }
+
             MovieIntentService.updateMovieFavorite(this, movieUri, values);
             return true;
         }
@@ -162,44 +170,74 @@ public class DetailActivity extends AppCompatActivity implements
         }
     }
 
-    private class TrailerASyncTask extends AsyncTask<Void, Void, ArrayList<URL>>
+    private class TrailerASyncTask extends AsyncTask<Void, Void, ArrayList<Object>>
     {
 
         @Override
-        protected ArrayList<URL> doInBackground(Void... params) {
+        protected ArrayList<Object> doInBackground(Void... params) {
             URL videoURL = NetworkUtils.
                     buildUrlForVideos(DetailActivity.this, movieUri.getLastPathSegment());
-            ArrayList<URL> trailerUrl = new ArrayList<>();
+
+            URL reviewsURL = NetworkUtils.
+                    buildUrlForReview(DetailActivity.this, movieUri.getLastPathSegment());
+            final ArrayList<Object> itemList = new ArrayList<>();
             try {
                 String json = NetworkUtils.getResponseFromHttpUrl(videoURL);
-                try {
-                    JSONObject videoJson = new JSONObject(json);
-                    JSONArray jsonArray = videoJson.getJSONArray("results");
-                    String videoKey;
-                    URL youtubeUrl;
-                    for (int i = 0; i < jsonArray.length(); i++){
-                        videoKey = jsonArray.getJSONObject(i).getString("key");
-                        youtubeUrl = NetworkUtils.
-                                buildUrlForYouTubeRequest(DetailActivity.this, videoKey);
-                        trailerUrl.add(youtubeUrl);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                addTrailers(itemList, json);
+
+                json = NetworkUtils.getResponseFromHttpUrl(reviewsURL);
+                addReviews(itemList, json);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return trailerUrl;
+            return itemList;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<URL> urls) {
-            super.onPostExecute(urls);
-            trailerAdapter = new TrailerAdapter(DetailActivity.this, DetailActivity.this, urls);
+        protected void onPostExecute(ArrayList<Object> item) {
+            super.onPostExecute(item);
+            trailerAdapter = new TrailerAndReviewAdapter(DetailActivity.this, DetailActivity.this, item);
             trailerRecyclerView.setAdapter(trailerAdapter);
             trailerRecyclerView.setLayoutManager(new LinearLayoutManager(
                     DetailActivity.this, LinearLayoutManager.VERTICAL, false));
         }
+
+        void addTrailers(ArrayList<Object> itemList, String json){
+            try {
+                JSONObject videoJson = new JSONObject(json);
+                JSONArray jsonArray = videoJson.getJSONArray("results");
+                String videoKey;
+                URL youtubeUrl;
+                //No more than 2 trailers
+                for (int i = 0; i < jsonArray.length() && i < 2; i++){
+                    videoKey = jsonArray.getJSONObject(i).getString("key");
+                    youtubeUrl = NetworkUtils.
+                            buildUrlForYouTubeRequest(DetailActivity.this, videoKey);
+                    itemList.add(youtubeUrl);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        void addReviews(ArrayList<Object> itemList, String json){
+            try {
+                JSONObject videoJson = new JSONObject(json);
+                JSONArray jsonArray = videoJson.getJSONArray("results");
+                String author;
+                String content;
+                //No more than 2 reviews
+                for (int i = 0; i < jsonArray.length() && i < 2; i++){
+                    author = jsonArray.getJSONObject(i).getString("author");
+                    content = jsonArray.getJSONObject(i).getString("content");
+                    itemList.add(new Review(author, content));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 }

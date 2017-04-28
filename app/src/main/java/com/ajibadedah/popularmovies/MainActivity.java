@@ -20,11 +20,12 @@ import com.ajibadedah.popularmovies.data.MovieContract.MovieEntry;
 import com.ajibadedah.popularmovies.data.SettingsPreferences;
 import com.ajibadedah.popularmovies.sync.MovieIntentService;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MovieAdapter.ThumbnailClickedListener{
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>
+        , MovieAdapter.ThumbnailClickedListener{
 
+    public static final int MOVIE_LOADER = 22;
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int MOVIE_LOADER = 22;
-
+    private Uri currentUri;
     private MovieAdapter movieAdapter;
     private RecyclerView recyclerView;
     private TextView emptyList;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        currentUri =  SettingsPreferences.getQueryUri(this);
         emptyList = (TextView) findViewById(R.id.listview_empty) ;
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         movieAdapter = new MovieAdapter(this, this);
@@ -52,9 +54,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //resize recyclers gridview depending on orientation
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int thumbnailWidth = Integer.parseInt(getString(R.string.thumbnail_list_width));
-        int columns = (int) ((displayMetrics.widthPixels / displayMetrics.density) / thumbnailWidth);
+        int columns = (int)((displayMetrics.widthPixels / displayMetrics.density) / thumbnailWidth);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(this, columns, GridLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(
+                new GridLayoutManager(this, columns, GridLayoutManager.VERTICAL, false));
+
+        if (!currentUri.equals( SettingsPreferences.getQueryUri(this))){
+            getSupportLoaderManager().restartLoader(MOVIE_LOADER, null, this);
+            currentUri =  SettingsPreferences.getQueryUri(this);
+        }
+    }
+
+    public void restartLoader(){
+        getSupportLoaderManager().restartLoader(MOVIE_LOADER, null, this);
     }
 
     @Override
@@ -84,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onThumbnailClicked(String movieID) {
         Intent movieDetail = new Intent(MainActivity.this, DetailActivity.class);
-        Uri uri = MovieEntry.buildUriForMovieWithMovieID(movieID);
+        Uri uri = currentUri.buildUpon().appendPath(movieID).build();
         movieDetail.setData(uri);
         startActivity(movieDetail);
 

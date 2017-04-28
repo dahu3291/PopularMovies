@@ -35,6 +35,8 @@ public class SettingsPreferences {
         return null;
     }
 
+
+
     public static int getFavoriteState(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 

@@ -1,9 +1,7 @@
 package com.ajibadedah.popularmovies.utilities;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ajibadedah.popularmovies.R;
@@ -46,7 +44,7 @@ public class NetworkUtils {
         return changeUriToURL(uri);
     }
 
-    public static URL buildUrlForYouTubeRequest(Context context, String key) {
+    public static URL buildUrlForYouTubeRequest(String key) {
         Uri uri = Uri.parse(YOUTUBE_URL + key).buildUpon().build();
         return changeUriToURL(uri);
     }

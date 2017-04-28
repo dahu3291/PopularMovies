@@ -6,10 +6,9 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import com.ajibadedah.popularmovies.R;
-import com.ajibadedah.popularmovies.sync.MovieIntentService;
 
 /**
- * Created by ajibade on 4/26/17.
+ * Created by ajibade on 4/26/17
  */
 
 public class SettingsPreferences {
@@ -37,19 +36,19 @@ public class SettingsPreferences {
 
 
 
-    public static int getFavoriteState(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-
-        String key = context.getString(R.string.fav_state);
-        int defaultVal = Integer.valueOf(context.getString(R.string.fav_state_false));
-        return sp.getInt(key, defaultVal);
-    }
-
-    public static void setFavoriteState(Context context, int state) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-
-        editor.putInt(context.getString(R.string.fav_state), state);
-        editor.apply();
-    }
+//    public static int getFavoriteState(Context context) {
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+//
+//        String key = context.getString(R.string.fav_state);
+//        int defaultVal = Integer.valueOf(context.getString(R.string.fav_state_false));
+//        return sp.getInt(key, defaultVal);
+//    }
+//
+//    public static void setFavoriteState(Context context, int state) {
+//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+//        SharedPreferences.Editor editor = sp.edit();
+//
+//        editor.putInt(context.getString(R.string.fav_state), state);
+//        editor.apply();
+//    }
 }

@@ -1,7 +1,6 @@
 package com.ajibadedah.popularmovies.data;
 
 import android.content.ContentProvider;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
@@ -18,13 +17,12 @@ import com.ajibadedah.popularmovies.data.MovieContract.MovieEntry;
 
 public class MovieProvider extends ContentProvider {
 
-    private MovieDbHelper movieDbHelper;
-    private UriMatcher matcher = buildMatcher();
-
     public static final int CODE_MOVIE = 100;
     public static final int CODE_MOVIE_WITH_ID = 101;
     public static final int CODE_FAVORITE = 200;
     public static final int CODE_FAVORITE_WITH_ID = 201;
+    private MovieDbHelper movieDbHelper;
+    private UriMatcher matcher = buildMatcher();
 
     private UriMatcher buildMatcher(){
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);

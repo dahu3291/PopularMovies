@@ -1,16 +1,13 @@
 package com.ajibadedah.popularmovies;
 
 /**
- * Created by ajibade on 4/28/17.
+ * Created by ajibade on 4/28/17
  */
 
 public class Review {
     private String author;
     private String content;
 
-    public Review(){
-        //empty constructor
-    }
 
     public Review(String author, String content){
         this.author = author;

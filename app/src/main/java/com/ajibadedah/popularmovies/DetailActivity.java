@@ -196,7 +196,7 @@ public class DetailActivity extends AppCompatActivity implements
         protected void onPostExecute(ArrayList<Object> item) {
             super.onPostExecute(item);
             TrailerAndReviewAdapter trailerAdapter =
-                    new TrailerAndReviewAdapter(DetailActivity.this, DetailActivity.this, item);
+                    new TrailerAndReviewAdapter(DetailActivity.this, item);
             trailerRecyclerView.setAdapter(trailerAdapter);
             trailerRecyclerView.setLayoutManager(new LinearLayoutManager(
                     DetailActivity.this, LinearLayoutManager.VERTICAL, false));
@@ -212,7 +212,7 @@ public class DetailActivity extends AppCompatActivity implements
                 for (int i = 0; i < jsonArray.length() && i < 2; i++){
                     videoKey = jsonArray.getJSONObject(i).getString("key");
                     youtubeUrl = NetworkUtils.
-                            buildUrlForYouTubeRequest(DetailActivity.this, videoKey);
+                            buildUrlForYouTubeRequest( videoKey);
                     itemList.add(youtubeUrl);
                 }
             } catch (JSONException e) {

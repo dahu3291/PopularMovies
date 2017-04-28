@@ -168,8 +168,6 @@ public class MovieIntentService extends IntentService {
             }
             cursor.close();
         }
-        isFavorite = isFavorite;
-        int a = isFavorite + 1;
         return isFavorite;
     }
 

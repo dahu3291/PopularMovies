@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         , MovieAdapter.ThumbnailClickedListener{
 
     public static final int MOVIE_LOADER = 22;
-    private static final String TAG = MainActivity.class.getSimpleName();
+//    private static final String TAG = MainActivity.class.getSimpleName();
     private Uri currentUri;
     private MovieAdapter movieAdapter;
     private RecyclerView recyclerView;
@@ -63,10 +63,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             getSupportLoaderManager().restartLoader(MOVIE_LOADER, null, this);
             currentUri =  SettingsPreferences.getQueryUri(this);
         }
-    }
-
-    public void restartLoader(){
-        getSupportLoaderManager().restartLoader(MOVIE_LOADER, null, this);
     }
 
     @Override

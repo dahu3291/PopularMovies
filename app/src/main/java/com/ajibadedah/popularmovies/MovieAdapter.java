@@ -12,8 +12,6 @@ import com.ajibadedah.popularmovies.data.MovieContract.MovieEntry;
 import com.ajibadedah.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by ajibade on 4/19/17
@@ -21,15 +19,10 @@ import java.util.ArrayList;
 
 class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
+    private final ThumbnailClickedListener thumbnailListener;
     private Cursor cursor;
     private Context context;
 
-    private final ThumbnailClickedListener thumbnailListener;
-
-
-    interface ThumbnailClickedListener{
-        void onThumbnailClicked(String movieID);
-    }
 
     MovieAdapter(Context context, ThumbnailClickedListener listener){
         this.context = context;
@@ -77,6 +70,10 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         }
         cursor = data;
         notifyDataSetChanged();
+    }
+
+    interface ThumbnailClickedListener{
+        void onThumbnailClicked(String movieID);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

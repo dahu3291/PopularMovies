@@ -1,6 +1,5 @@
 package com.ajibadedah.popularmovies;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,17 +15,14 @@ import java.util.List;
 
 public class TrailerAndReviewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private static final int VIEW_TYPE_COUNT = 2;
     private static final int VIEW_TYPE_TRAILER = 0;
     private static final int VIEW_TYPE_REVIEWS = 1;
 
     private final List<Object> listItems;
     private final TrailerClickedListener trailerClickedListener;
-    private Context context;
 
 
-    TrailerAndReviewAdapter(Context context, TrailerClickedListener listener, List<Object> listItems){
-        this.context = context;
+    TrailerAndReviewAdapter(TrailerClickedListener listener, List<Object> listItems){
         this.listItems = listItems;
         this.trailerClickedListener = listener;
     }

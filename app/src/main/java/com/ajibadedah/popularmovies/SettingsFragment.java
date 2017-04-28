@@ -9,7 +9,6 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 
-import com.ajibadedah.popularmovies.data.MovieContract;
 import com.ajibadedah.popularmovies.sync.MovieIntentService;
 
 
@@ -58,9 +57,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             if (value.equals(getString(R.string.pref_sort_popular)) ||
                     value.equals(getString(R.string.pref_sort_top_rated))){
                 MovieIntentService.startMovieSync(context);
-            }
-            if (value.equals(context.getString(R.string.pref_sort_favorite))){
-//                getSupportLoaderManager().restartLoader(MainActivity.MOVIE_LOADER, null, MainActivity.class);
             }
         }
 

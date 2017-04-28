@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.ajibadedah.popularmovies.R;
+import com.ajibadedah.popularmovies.data.SettingsPreferences;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,26 +27,43 @@ public class NetworkUtils {
 //    private static final String DISC_MOVIE_URL = "https://api.themoviedb.org/3/discover/movie";
     private static final String MOVIE_URL = "https://api.themoviedb.org/3/movie/";
     private static final String IMAGE_DB_URL = "https://image.tmdb.org/t/p";
+    private static final String YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 //    private static final String QUERY_SORT = "sort_by";
     private static final String QUERY_API = "api_key";
 
-    private static String getPreferredSort(Context context) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-
-        String key = context.getString(R.string.pref_sort_key);
-        String defaultVal = context.getString(R.string.pref_sort_popular);
-
-        return sp.getString(key, defaultVal);
-    }
     public static URL buildUrlForMovies(Context context) {
-        Uri weatherQueryUri = Uri.parse(MOVIE_URL + getPreferredSort(context)).buildUpon()
+        Uri uri = Uri.parse(MOVIE_URL + SettingsPreferences.getPreferredSort(context)).buildUpon()
+                .appendQueryParameter(QUERY_API, context.getString(R.string.API_KEY))
+                .build();
+        return changeUriToURL(uri);
+    }
+
+    public static URL buildUrlForVideos(Context context, String movieId) {
+        Uri uri = Uri.parse(MOVIE_URL + movieId + "/" + "videos").buildUpon()
                 .appendQueryParameter(QUERY_API, context.getString(R.string.API_KEY))
                 .build();
 
+        return changeUriToURL(uri);
+    }
+
+    public static URL buildUrlForYouTubeRequest(Context context, String key) {
+        Uri uri = Uri.parse(YOUTUBE_URL + key).buildUpon().build();
+        return changeUriToURL(uri);
+    }
+
+    public static URL buildUrlForReview(Context context, String movieId) {
+        Uri uri = Uri.parse(MOVIE_URL + movieId + "/" + "reviews").buildUpon()
+                .appendQueryParameter(QUERY_API, context.getString(R.string.API_KEY))
+                .build();
+
+        return changeUriToURL(uri);
+    }
+
+    private static URL changeUriToURL(Uri uri){
         try {
-            URL movieUrl = new URL(weatherQueryUri.toString());
-            Log.v(TAG, "URL: " + movieUrl);
-            return movieUrl;
+            URL url = new URL(uri.toString());
+            Log.v(TAG, "URL: " + url);
+            return url;
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;

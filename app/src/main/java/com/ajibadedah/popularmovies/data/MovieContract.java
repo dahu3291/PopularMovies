@@ -14,9 +14,14 @@ public class MovieContract {
 
     public static final class MovieEntry implements BaseColumns {
 
-        static final String TABLE_NAME = "movie";
-        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
-                .appendPath(TABLE_NAME)
+        static final String TABLE_NAME_MOVIE = "movie";
+        public static final Uri CONTENT_URI_MOVIE = BASE_CONTENT_URI.buildUpon()
+                .appendPath(TABLE_NAME_MOVIE)
+                .build();
+
+        static final String TABLE_NAME_FAVORITE = "favorite";
+        public static final Uri CONTENT_URI_FAVORITE = BASE_CONTENT_URI.buildUpon()
+                .appendPath(TABLE_NAME_FAVORITE)
                 .build();
 
 
@@ -26,9 +31,16 @@ public class MovieContract {
         public static final String COLUMN_RATING = "rating";
         public static final String COLUMN_RELEASE_DATE = "release_date";
         public static final String COLUMN_PHOTO_PATH = "photo_path";
+        public static final String COLUMN_FAVORITE = "favorite";
 
-        public static Uri buildUriWithMovieID(String movieID) {
-            return CONTENT_URI.buildUpon()
+        public static Uri buildUriForMovieWithMovieID(String movieID) {
+            return CONTENT_URI_MOVIE.buildUpon()
+                    .appendPath(movieID)
+                    .build();
+        }
+
+        public static Uri buildUriForFavoriteWithMovieID(String movieID) {
+            return CONTENT_URI_FAVORITE.buildUpon()
                     .appendPath(movieID)
                     .build();
         }
